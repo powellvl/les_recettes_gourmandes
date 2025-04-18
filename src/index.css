@@ -52,16 +52,6 @@ img {
   height: auto;
 }
 
-a {
-  color: #d04f4f;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #d04f4f;
-  text-decoration: underline;
-}
-
 h1 {
   color: #d04f4f;
   font-family: DM Sans;
