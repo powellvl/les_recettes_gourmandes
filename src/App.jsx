@@ -1,35 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import Header from "./components/Header";
+import Research from "./components/Research";
+import Tags from "./components/Tags";
+import TagsMenu from "./components/TagsMenu";
+import Recipe from "./components/Recipe";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [selectedAppliances, setSelectedAppliances] = useState([]);
+  const [selectedUstensils, setSelectedUstensils] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleIngredientSelect = (ingredient) => {
+    if (!selectedIngredients.includes(ingredient)) {
+      setSelectedIngredients([...selectedIngredients, ingredient]);
+    }
+  };
+  const handleApplianceSelect = (appliance) => {
+    if (!selectedAppliances.includes(appliance)) {
+      setSelectedAppliances([...selectedAppliances, appliance]);
+    }
+  };
+  const handleUstensilSelect = (ustensil) => {
+    if (!selectedUstensils.includes(ustensil)) {
+      setSelectedUstensils([...selectedUstensils, ustensil]);
+    }
+  };
+  const handleIngredientSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const handleIngredientRemove = (ingredient) => {
+    setSelectedIngredients(
+      selectedIngredients.filter((item) => item !== ingredient)
+    );
+  };
+
+  const handleApplianceRemove = (appliance) => {
+    setSelectedAppliances(
+      selectedAppliances.filter((item) => item !== appliance)
+    );
+  };
+  const handleUstensilRemove = (ustensil) => {
+    setSelectedUstensils(selectedUstensils.filter((item) => item !== ustensil));
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+      <main id="main">
+        <div className="container mt-4">
+          <div className="mb-4 row">
+            <Research />
+            <Tags
+              selectedIngredients={selectedIngredients}
+              onIngredientRemove={handleIngredientRemove}
+              selectedAppliances={selectedAppliances}
+              onApplianceRemove={handleApplianceRemove}
+              selectedUstensils={selectedUstensils}
+              onUstensilRemove={handleUstensilRemove}
+            />
+            <TagsMenu
+              selectedIngredients={selectedIngredients}
+              onIngredientSelect={handleIngredientSelect}
+              onIngredientRemove={handleIngredientRemove}
+              selectedAppliances={selectedAppliances}
+              onApplianceSelect={handleApplianceSelect}
+              onApplianceRemove={handleIngredientRemove}
+              selectedUstensils={selectedUstensils}
+              onUstensilSelect={handleUstensilSelect}
+              onUstensilRemove={handleIngredientRemove}
+              searchTerm={searchTerm}
+            />
+            <Recipe />
+          </div>
+        </div>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
