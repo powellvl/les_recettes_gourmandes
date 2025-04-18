@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-function Recipe({ recipes = [] }) {
+function Recipe({ recipes = [], onRecipesUpdated = null }) {
+  // Notifier le parent des recettes actuellement affichées
+  useEffect(() => {
+    if (onRecipesUpdated) {
+      onRecipesUpdated(recipes);
+    }
+  }, [recipes, onRecipesUpdated]);
+
   return (
     <div
       id="recipes-list"
@@ -14,7 +21,7 @@ function Recipe({ recipes = [] }) {
                 <div className="card-img-top">
                   <img
                     className="dish"
-                    src="src/assets/pexels-photo-2097090.jpeg"
+                    src="/src/assets/pexels-photo-2097090.jpeg"
                     alt="food"
                   />
                 </div>

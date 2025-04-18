@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { recipes } from "../json/recipes.js";
+import { recipes as allRecipes } from "../json/recipes.js";
 
 function TagsMenu({
-  selectedIngredients, // Ajout de la prop pour recevoir les ingrédients sélectionnés
-  onIngredientSelect, // Ajout de la prop pour la fonction de sélection
-  selectedAppliances = [], // Ajout de la prop pour recevoir les appareils sélectionnés
-  onApplianceSelect, // Ajout de la prop pour la fonction de sélection
-  selectedUstensils = [], // Prop pour recevoir les ustensiles sélectionnés
-  onUstensilSelect, // Prop pour la fonction de sélection des ustensiles
+  selectedIngredients,
+  onIngredientSelect,
+  selectedAppliances = [],
+  onApplianceSelect,
+  selectedUstensils = [],
+  onUstensilSelect,
+  displayedRecipes = [], // Nouvelle prop pour recevoir les recettes actuellement affichées
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [ingredients, setIngredients] = useState([]);
@@ -94,13 +95,17 @@ function TagsMenu({
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
-  // Extraire les ingrédients uniques de toutes les recettes
+  // Extraire les ingrédients uniques des recettes affichées
   useEffect(() => {
+    // Déterminer quelles recettes utiliser: les recettes affichées ou toutes les recettes
+    const recipesToUse =
+      displayedRecipes.length > 0 ? displayedRecipes : allRecipes;
+
     // Utiliser un objet pour éliminer les doublons même avec les différences de pluriel/singulier
     const uniqueIngredientsMap = {};
     const displayNames = {};
 
-    recipes.forEach((recipe) => {
+    recipesToUse.forEach((recipe) => {
       recipe.ingredients.forEach((item) => {
         if (item.ingredient) {
           // Normaliser le nom de l'ingrédient
@@ -123,15 +128,19 @@ function TagsMenu({
     // Convertir l'objet en tableau et trier alphabétiquement
     const uniqueIngredientsList = Object.values(uniqueIngredientsMap).sort();
     setIngredients(uniqueIngredientsList);
-  }, []);
+  }, [displayedRecipes]); // Réagir aux changements dans les recettes affichées
 
-  // Extraire les appareils uniques de toutes les recettes
+  // Extraire les appareils uniques des recettes affichées
   useEffect(() => {
+    // Déterminer quelles recettes utiliser: les recettes affichées ou toutes les recettes
+    const recipesToUse =
+      displayedRecipes.length > 0 ? displayedRecipes : allRecipes;
+
     // Utiliser un objet pour éliminer les doublons
     const uniqueAppliancesMap = {};
     const displayNames = {};
 
-    recipes.forEach((recipe) => {
+    recipesToUse.forEach((recipe) => {
       if (recipe.appliance) {
         // Normaliser le nom de l'appareil
         const normalizedName = normalizeApplianceName(recipe.appliance);
@@ -152,15 +161,19 @@ function TagsMenu({
     // Convertir l'objet en tableau et trier alphabétiquement
     const uniqueAppliancesList = Object.values(uniqueAppliancesMap).sort();
     setAppliances(uniqueAppliancesList);
-  }, []);
+  }, [displayedRecipes]); // Réagir aux changements dans les recettes affichées
 
-  // Extraire les ustensiles uniques de toutes les recettes
+  // Extraire les ustensiles uniques des recettes affichées
   useEffect(() => {
+    // Déterminer quelles recettes utiliser: les recettes affichées ou toutes les recettes
+    const recipesToUse =
+      displayedRecipes.length > 0 ? displayedRecipes : allRecipes;
+
     // Utiliser un objet pour éliminer les doublons
     const uniqueUstensilsMap = {};
     const displayNames = {};
 
-    recipes.forEach((recipe) => {
+    recipesToUse.forEach((recipe) => {
       if (recipe.ustensils && Array.isArray(recipe.ustensils)) {
         recipe.ustensils.forEach((ustensil) => {
           if (ustensil) {
@@ -184,7 +197,7 @@ function TagsMenu({
     // Convertir l'objet en tableau et trier alphabétiquement
     const uniqueUstensilsList = Object.values(uniqueUstensilsMap).sort();
     setUstensils(uniqueUstensilsList);
-  }, []);
+  }, [displayedRecipes]); // Réagir aux changements dans les recettes affichées
 
   // Gérer l'ouverture et la fermeture du dropdown ingrédients
   const handleInputFocus = () => {

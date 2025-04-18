@@ -12,6 +12,7 @@ function Home() {
   const [selectedUstensils, setSelectedUstensils] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+  const [displayedRecipes, setDisplayedRecipes] = useState(recipes); // Nouveau state pour suivre les recettes affichées
 
   // Gérer la recherche dans la barre principale
   const handleSearch = (term) => {
@@ -169,8 +170,12 @@ function Home() {
               onApplianceSelect={handleApplianceSelect}
               selectedUstensils={selectedUstensils}
               onUstensilSelect={handleUstensilSelect}
+              displayedRecipes={displayedRecipes} // Passage des recettes affichées à TagsMenu
             />
-            <Recipe recipes={filteredRecipes} />
+            <Recipe
+              recipes={filteredRecipes}
+              onRecipesUpdated={setDisplayedRecipes} // Mise à jour des recettes affichées
+            />
           </div>
         </div>
       </main>
